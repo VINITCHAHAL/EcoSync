@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #e9f9e9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #3ad7d3;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #fff;
+            background-color: #3ad7d3;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background-color: #2fa7b5;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-card {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-card h2 {
+            margin-bottom: 10px;
+            color: #3ad7d3;
+        }
+
+        .user-card p {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>User Details</h1>
+            <a href="{% url 'admined' %}" class="back-btn">Back to home</a>
+        </div>
+
+        <div class="user-details">
+            <!-- User 1 -->
+            <div class="user-card">
+                <h2>User 1</h2>
+                <p><strong>Name:</strong> Manikandan</p>
+                <p><strong>Date of Birth:</strong> January 19, 1980</p>
+                <p><strong>Join Date:</strong> March 15, 2009</p>
+                <p><strong>Phone No:</strong> +1234567890</p>
+                <p><strong>Address:</strong> 10th street Kumaran Nagar,Gandhipuram, Coimbatore</p>
+                <p><strong>Working Address:</strong> 1-6 street Kumaran Nagar,Gandhipuram, Coimbatore</p>
+            </div>
+
+            <!-- User 2 -->
+            <div class="user-card">
+                <h2>User 2</h2>
+                <p><strong>Name:</strong> Rajesh</p>
+                <p><strong>Date of Birth:</strong> May 2, 1977</p>
+                <p><strong>Join Date:</strong> April 20, 2011</p>
+                <p><strong>Phone No:</strong> +9987654321</p>
+                <p><strong>Address:</strong> 17/3 Vels Street, RS Puram, Coimbatore</p>
+            </div>
+
+            <!-- User 3 -->
+            <div class="user-card">
+                <h2>User 3</h2>
+                <p><strong>Name:</strong>John</p>
+                <p><strong>Date of Birth:</strong> March 3, 1988</p>
+                <p><strong>Join Date:</strong> May 25, 2019</p>
+                <p><strong>Phone No:</strong> +8122334455</p>
+                <p><strong>Address:</strong> Amman kovil,Saravanampatti,Coimbatore</p>
+            </div>
+
+            <!-- User 4 -->
+            <div class="user-card">
+                <h2>User 4</h2>
+                <p><strong>Name:</strong> Priyavarshan</p>
+                <p><strong>Date of Birth:</strong> April 4, 1987</p>
+                <p><strong>Join Date:</strong> June 30, 2023</p>
+                <p><strong>Phone No:</strong> +5566778899</p>
+                <p><strong>Address:</strong> 4th street, cross cut road ,Gandhipuram Coimbatore</p>
+            </div>
+
+            <!-- User 5 -->
+            <div class="user-card">
+                <h2>User 5</h2>
+                <p><strong>Name:</strong> Hari</p>
+                <p><strong>Date of Birth:</strong> May 5, 1992</p>
+                <p><strong>Join Date:</strong> December 19, 2003</p>
+                <p><strong>Phone No:</strong> +7358169214</p>
+                <p><strong>Address:</strong> 10/4 near govt school, Periyaar Nagar, Erode</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

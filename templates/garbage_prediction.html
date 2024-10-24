@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garbage Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Garbage Prediction</h1>
+    <div class="chart-container">
+        <canvas id="garbageChart"></canvas>
+    </div>
+    <button onclick="updatePredictions()">Update Predictions</button>
+
+    <script>
+        // Parse the data passed from Django
+        const data = JSON.parse('{{ data|safe }}');
+        let predictions = JSON.parse('{{ predictions|safe }}');
+
+        // Prepare data for Chart.js
+        const chartData = {
+            labels: [...data.map(d => d.Day), ...predictions.map(p => p.Day)],
+            datasets: [
+                {label: 'Street 1', data: [...data.map(d => d['street 1']), ...predictions.map(p => p['street 1'])], borderColor: 'red', fill: false},
+                {label: 'Street 2', data: [...data.map(d => d['street 2']), ...predictions.map(p => p['street 2'])], borderColor: 'blue', fill: false},
+                {label: 'Street 3', data: [...data.map(d => d['street 3']), ...predictions.map(p => p['street 3'])], borderColor: 'green', fill: false},
+                {label: 'Street 4', data: [...data.map(d => d['street 4']), ...predictions.map(p => p['street 4'])], borderColor: 'yellow', fill: false},
+                {label: 'Street 5', data: [...data.map(d => d['street 5']), ...predictions.map(p => p['street 5'])], borderColor: 'purple', fill: false},
+            ]
+        };
+
+        // Create the chart
+        const ctx = document.getElementById('garbageChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            displayFormats: {
+                                day: 'MMM D'
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function updatePredictions() {
+            fetch('/update_predictions/')
+                .then(response => response.json())
+                .then(data => {
+                    predictions = data.predictions;
+                    
+                    // Update chart data
+                    chart.data.labels = [...chartData.labels.slice(0, -5), ...predictions.map(p => p.Day)];
+                    chart.data.datasets.forEach((dataset, i) => {
+                        const street = `street ${i+1}`;
+                        dataset.data = [...dataset.data.slice(0, -5), ...predictions.map(p => p[street])];
+                    });
+                    
+                    chart.update();
+                });
+        }
+    </script>
+</body>
+</html>

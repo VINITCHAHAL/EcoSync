@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Predict</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color:  #e9f9e9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 60%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dropdown-container {
+            margin-bottom: 20px;
+        }
+
+        .dropdown-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .info-box {
+            background-color: #e9f9e9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none;
+        }
+
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff; /* Blue background */
+            border: 1px solid #007bff; /* Blue border */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Hover effect */
+        .back-btn:hover {
+            background-color: #0056b3; /* Darker blue background */
+            border-color: #0056b3; /* Darker blue border */
+        }
+
+        /* Focus effect for accessibility */
+        .back-btn:focus {
+            outline: 3px solid #0056b3; /* Focus outline */
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+                <a href="{% url 'admined' %}" class="back-btn">Back to home</a>
+            
+    
+    
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <h1 class="header-title">Data Analysis</h1>
+            <div class="predict-info">
+                <h2>Street Usage Prediction</h2>
+                <p>Select an area and street to view the predicted dustbin usage:</p>
+                
+                <!-- Form or dropdowns for user selection -->
+                <div class="form-group">
+                    <label for="area">Area:</label>
+                    <select id="area" class="form-control">
+                        <option value="">-- Select Area --</option>
+                        <!-- Populate with areas from your data -->
+                        <option value="area1">Area 1</option>
+                        <option value="area2">Area 2</option>
+                        <option value="area3">Area 3</option>
+                        <option value="area4">Area 4</option>
+                        <option value="area5">Area 5</option>
+                        
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="street">Street:</label>
+                    <select id="street" class="form-control" disabled>
+                        <option value="">-- Select Street --</option>
+                        <!-- Streets will be populated based on the selected area -->
+                    </select>
+                </div>
+
+                <!-- Display dustbin usage -->
+                <div id="usage-info" class="alert alert-info" style="display: none;">
+                    <strong>Predicted Dustbin Usage:</strong> <span id="dustbinUsage">0 kg</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Include JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const areaSelect = document.getElementById('area');
+            const streetSelect = document.getElementById('street');
+            const usageInfo = document.getElementById('usage-info');
+            const dustbinUsageElem = document.getElementById('dustbinUsage');
+
+            // Street options for each area
+            const streets = {
+                area1: ['Street 1', 'Street 2', 'Street 3', 'Street 4', 'Street 5', 'Street 6', 'Street 7', 'Street 8', 'Street 9', 'Street 10'],
+                area2: ['Street 1', 'Street 2', 'Street 3', 'Street 4', 'Street 5', 'Street 6', 'Street 7', 'Street 8', 'Street 9', 'Street 10'],
+                area3: ['Street 1', 'Street 2', 'Street 3', 'Street 4', 'Street 5', 'Street 6', 'Street 7', 'Street 8', 'Street 9', 'Street 10'],
+                area4: ['Street 1', 'Street 2', 'Street 3', 'Street 4', 'Street 5', 'Street 6', 'Street 7', 'Street 8', 'Street 9', 'Street 10'],
+                area5: ['Street 1', 'Street 2', 'Street 3', 'Street 4', 'Street 5', 'Street 6', 'Street 7', 'Street 8', 'Street 9', 'Street 10']
+            };
+
+            // Dustbin usage data (predictive analysis)
+            const dustbinUsageData = {
+                'Street 1': 50,
+                'Street 2': 30,
+                'Street 3': 45,
+                'Street 4': 60,
+                'Street 5': 55,
+                'Street 6': 40,
+                'Street 7': 35,
+                'Street 8': 65,
+                'Street 9': 70,
+                'Street 10': 80
+            };
+
+            // Update street options based on selected area
+            areaSelect.addEventListener('change', (event) => {
+                const selectedArea = event.target.value;
+                streetSelect.innerHTML = '<option value="">-- Select Street --</option>';
+                if (selectedArea) {
+                    const areaStreets = streets[selectedArea] || [];
+                    areaStreets.forEach(street => {
+                        const option = document.createElement('option');
+                        option.value = street;
+                        option.textContent = street;
+                        streetSelect.appendChild(option);
+                    });
+                    streetSelect.disabled = false;
+                } else {
+                    streetSelect.disabled = true;
+                }
+                usageInfo.style.display = 'none'; // Hide usage info when area is changed
+            });
+
+            // Update dustbin usage info based on selected street
+            streetSelect.addEventListener('change', (event) => {
+                const selectedStreet = event.target.value;
+                if (selectedStreet) {
+                    const usage = dustbinUsageData[selectedStreet] || 0;
+                    dustbinUsageElem.textContent = `${usage} kg`; // Corrected usage syntax
+                    usageInfo.style.display = 'block';
+                } else {
+                    usageInfo.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

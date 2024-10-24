@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        /* Add your styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e9f9e9;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .detail-group {
+            margin-bottom: 15px;
+        }
+        .detail-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .detail-group .detail-value {
+            padding: 8px;
+            background-color: #f4f4f4;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .back-btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3ad7d3;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .back-btn:hover {
+            background-color: #2fa7b5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'dashboard' %}" class="back-btn">Back to Dashboard</a>
+        <h1>My Profile</h1>
+        <div class="detail-group">
+            <label for="name">Name</label>
+            <div class="detail-value" id="name">Vinit</div>
+        </div>
+        <div class="detail-group">
+            <label for="age">Age</label>
+            <div class="detail-value" id="age">21</div>
+        </div>
+        <div class="detail-group">
+            <label for="gender">Gender</label>
+            <div class="detail-value" id="sex">Male</div>
+        </div>
+        <div class="detail-group">
+            <label for="contact">Contact</label>
+            <div class="detail-value" id="contact">9797632997</div>
+        </div>
+        <div class="detail-group">
+            <label for="address">Address</label>
+            <div class="detail-value" id="address">Saravanampatti, Coimbatore</div>
+        </div>
+        <div class="detail-group">
+            <label for="role">Job/Role</label>
+            <div class="detail-value" id="role">User</div>
+        </div>
+    </div>
+</body>
+</html>

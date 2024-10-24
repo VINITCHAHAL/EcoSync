@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Waste Management Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #d1d1d1;
+            padding: 20px;
+            height: 100vh;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            background-color: white;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            color: teal;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background-color: white;
+            padding: 20px;
+            width: 150px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .task {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .task textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .task-list {
+            margin: 20px 0;
+            list-style: none;
+            padding: 0;
+        }
+        .task-list li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .finish-btn {
+            display: block;
+            width: 100%;
+            background-color: black;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .complete-btn {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="sidebar">
+            <a href="#">Dashboard</a>
+            <a href="{% url 'profile' %}">Profile</a>
+            <a href="{% url 'map' %}">Map</a>
+            <a id="logoutBtn" href="{% url 'index' %}">LOGOUT</a>
+        </div>
+
+        <div class="content">
+            <div class="header">SMART WASTE MANAGEMENT</div>
+            <div class="stats">
+                <div class="stat-box">NO OF TASK<br><span id="totalTasks">0</span></div>
+                <div class="stat-box">COMPLETED<br><span id="completedTasks">0</span></div>
+                <div class="stat-box">PENDING<br><span id="pendingTasks">0</span></div>
+            </div>
+
+            <div class="task">
+                <h3>NEW TASK</h3>
+                <textarea id="taskDescription" rows="3" placeholder="Description"></textarea>
+            </div>
+
+            <button class="finish-btn" id="addTaskBtn">FINISH</button>
+
+            <ul class="task-list" id="taskList">
+                <!-- Tasks will appear here -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = "index.html"; // Redirect to login if not logged in
+        }
+
+        // Variables to keep track of task counts
+        let totalTasks = 0;
+        let completedTasks = 0;
+        let pendingTasks = 0;
+
+        // HTML elements
+        const taskDescription = document.getElementById("taskDescription");
+        const addTaskBtn = document.getElementById("addTaskBtn");
+        const taskList = document.getElementById("taskList");
+
+        const totalTasksElement = document.getElementById("totalTasks");
+        const completedTasksElement = document.getElementById("completedTasks");
+        const pendingTasksElement = document.getElementById("pendingTasks");
+
+        // Logout function
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn'); // Clear login status
+            window.location.href = 'index.html';   // Redirect to login page
+        });
+
+        // Event listener to add a task
+        addTaskBtn.addEventListener("click", () => {
+            const description = taskDescription.value.trim();
+            if (description) {
+                // Create a new task element
+                const taskItem = document.createElement("li");
+                taskItem.innerHTML = `
+                    ${description} 
+                    <button class="complete-btn">Complete</button>
+                `;
+
+                // Add task to the list
+                taskList.appendChild(taskItem);
+
+                // Update task counts
+                totalTasks++;
+                pendingTasks++;
+                updateTaskStats();
+
+                // Add event listener to "Complete" button
+                taskItem.querySelector(".complete-btn").addEventListener("click", () => {
+                    taskItem.remove();
+                    completedTasks++;
+                    pendingTasks--;
+                    updateTaskStats();
+                });
+
+                // Clear the textarea
+                taskDescription.value = "";
+            }
+        });
+
+
+        function updateTaskStats() {
+            totalTasksElement.textContent = totalTasks;
+            completedTasksElement.textContent = completedTasks;
+            pendingTasksElement.textContent = pendingTasks;
+        }
+        
+        
+    </script>
+
+</body>
+</html>

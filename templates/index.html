@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Waste Management Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: #eafaf5;
+            padding: 30px;
+            width: 350px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .login-container h1 {
+            color: teal;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .login-container a {
+            display: block;
+            margin-top: 10px;
+            color: grey;
+            text-decoration: none;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>SMART WASTE MANAGEMENT</h1>
+        <h3>LOGIN</h3>
+        <input type="text" id="username" placeholder="USERNAME">
+        <input type="password" id="password" placeholder="PASSWORD">
+        <button id="loginBtn">LOGIN</button>
+        <a href="#">FORGET PASSWORD</a>
+        <a href="#">SIGN UP</a>
+        <div class="error" id="error"></div>
+    </div>
+ <script>
+    // Your JavaScript for login
+    const loginBtn = document.getElementById("loginBtn");
+const errorDiv = document.getElementById("error");
+
+loginBtn.addEventListener("click", () => {
+const username = document.getElementById("username").value;
+const password = document.getElementById("password").value;
+
+if (username === "vinitkumar.22cs@kct.ac.in" && password === "kite1234") {
+    localStorage.setItem('isLoggedIn', 'true');
+    window.location.href = "/dashboard/"; // Correct Django URL routing
+} else if (username === "admin" && password === "admin") {
+    localStorage.setItem('isLoggedIn', 'true');
+    window.location.href = "/admined/"; // Correct Django URL routing
+} else {
+    errorDiv.textContent = "Invalid username or password!";
+}
+}); 
+// Logout function
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('isLoggedIn'); // Clear login status
+    window.location.href = ""; // Redirect to index.html (home page)
+});
+
+
+
+</script>
+
+</body>
+</html>

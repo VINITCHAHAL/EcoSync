@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Waste Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #f0f0f0;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar li a {
+            text-decoration: none;
+            color: black;
+            padding: 10px;
+            display: block;
+            text-align: center;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .sidebar li a:hover {
+            background-color: #ddd;
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #e9f9e9;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 24px;
+            color: #3ad7d3;
+            margin-bottom: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .grid-item {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dynamic Pie Chart Styles */
+        .dynamic-chart-container {
+            max-width: 400px;
+            margin: 40px auto 0;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dynamic-chart-container input[type="number"] {
+            padding: 8px;
+            width: 80px;
+        }
+
+        .dynamic-chart-container button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dynamic-chart-container button:hover {
+            background-color: #45a049;
+        }
+
+        /* Add color blocks for label */
+        .color-box {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            border-radius: 50%;
+        }
+
+        .green { background-color: #4CAF50; }
+        .pink { background-color: #FF6384; }
+        .yellow { background-color: #FFCE56; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul>
+                <li><a href="#" onclick="showPage('home')">Home</a></li>
+                <li><a href="{% url 'data' %}">Data Analysis</a></li>
+                <li><a href="{% url 'predict' %}">Predict</a></li>
+                <li><a href="{% url 'admined_profile' %}">Profile</a></li>
+                <li><a href="{% url 'map' %}">Map</a></li>
+                <li><a href="{% url 'details' %}">User Details</a></li> 
+                <li><a id="logoutBtn" href="{% url 'index' %}">LOGOUT</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <h1 class="header-title">SMART WASTE MANAGEMENT</h1>
+
+            <!-- Pages -->
+            <div id="home" class="page active">
+                <div class="grid-container">
+                    <div class="grid-item">Total Task
+                        <h3 id="totalTasks">0</h3>
+                    </div>
+                    <div class="grid-item">Total Remaining
+                        <h3 id="totalRemaining">0</h3>
+                    </div>
+                    <div class="grid-item">Total Completed
+                        <h3 id="totalCompleted">0</h3>
+                    </div>
+                </div>
+
+                <!-- Dynamic Pie Chart Section -->
+                <div class="dynamic-chart-container">
+                    <h3>Waste Management Pie Chart</h3>
+                    
+                    <div class="input-group">
+                        <label><span class="color-box green"></span> Recyclable:</label>
+                        <input type="number" id="recyclableInput" value="50" min="0">
+
+                        <label><span class="color-box pink"></span> Non-Recyclable:</label>
+                        <input type="number" id="nonRecyclableInput" value="30" min="0">
+
+                        <label><span class="color-box yellow"></span> Others:</label>
+                        <input type="number" id="othersInput" value="20" min="0">
+                    </div>
+
+                    <button onclick="updateDynamicChart()">Update Pie Chart</button>
+                    
+                    <canvas id="dynamicPieChart"></canvas>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Sample data for task and bin system
+        const taskData = {
+            totalTasks: 10,
+            totalRemaining: 4,
+            totalCompleted: 6,
+        };
+
+        // Update task stats
+        document.getElementById('totalTasks').innerText = taskData.totalTasks;
+        document.getElementById('totalRemaining').innerText = taskData.totalRemaining;
+        document.getElementById('totalCompleted').innerText = taskData.totalCompleted;
+
+        // Function to show/hide pages
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Event listener for logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn'); // Clear login status
+            window.location.href = "";   // Redirect to login page
+        });
+
+        // Dynamic pie chart for waste management
+        var dynamicCtx = document.getElementById('dynamicPieChart').getContext('2d');
+        var dynamicPieChart = new Chart(dynamicCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Recyclable', 'Non-Recyclable', 'Others'],
+                datasets: [{
+                    data: [50, 30, 20], // Initial values
+                    backgroundColor: ['#4CAF50', '#FF6384', '#FFCE56'],
+                    hoverBackgroundColor: ['#66BB6A', '#FF6384', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+
+        function updateDynamicChart() {
+            var recyclable = document.getElementById('recyclableInput').value;
+            var nonRecyclable = document.getElementById('nonRecyclableInput').value;
+            var others = document.getElementById('othersInput').value;
+
+            // Update the data
+            dynamicPieChart.data.datasets[0].data = [recyclable, nonRecyclable, others];
+            dynamicPieChart.update(); // Redraw the chart
+        }
+    </script>
+</body>
+</html>
